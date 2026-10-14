@@ -4,6 +4,8 @@
 
 [简体中文](README.zh-CN.md) · [Model & assumptions](docs/MODEL.md) · [Contributing](CONTRIBUTING.md)
 
+**[Try the public lab](https://qsxustc.github.io/freshtrace/)** · [Download v0.1.0 source](https://github.com/qsxustc/freshtrace/archive/refs/tags/v0.1.0.zip)
+
 Paste response headers. Move through time. See when a browser or shared cache can reuse a response, needs to validate it, or has to contact the origin. Then compare a second policy before changing your configuration.
 
 FreshTrace is an offline HTTP cache policy lab with a browser interface and a command-line tool. Both use the same deterministic analysis engine. No account, API key, AI model, or runtime dependencies are required.
@@ -116,6 +118,8 @@ npm run package:release
 ```
 
 The static build is written to `dist/`. Packaging requires the system `zip` command and writes `release/freshtrace-v0.1.0.zip`; use `npm run package:release -- --force` to replace an existing archive. Serve the static build with a static server or deploy it to static hosting. The included Pages workflow can publish it after GitHub Pages is configured to use GitHub Actions. A workflow file alone does not create a live deployment.
+
+The [public lab](https://qsxustc.github.io/freshtrace/) is deployed through GitHub Pages. The release commit passed [Node.js 20, 22, and 24 CI](https://github.com/qsxustc/freshtrace/actions/runs/38573617461) and [the Pages deployment](https://github.com/qsxustc/freshtrace/actions/runs/38573617610).
 
 Useful contributions include minimal header cases, corrections backed by a primary source, clearer decision explanations, and accessibility improvements. Start with [CONTRIBUTING.md](CONTRIBUTING.md).
 
