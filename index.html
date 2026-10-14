@@ -5,6 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Turn HTTP cache headers into clear answers. Compare browser and CDN behavior on an interactive timeline. Offline, open source, no account.">
   <meta name="theme-color" content="#f7f8fa">
+  <link rel="canonical" href="https://qsxustc.github.io/freshtrace/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FreshTrace — HTTP cache headers, explained over time">
+  <meta property="og:description" content="Compare browser and shared-cache decisions from HTTP response headers. Offline timelines, A/B policies, and a zero-dependency CLI.">
+  <meta property="og:url" content="https://qsxustc.github.io/freshtrace/">
+  <meta property="og:image" content="https://qsxustc.github.io/freshtrace/assets/social-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="FreshTrace example: Age 45 leaves 15 seconds of browser freshness and 255 seconds of shared-cache freshness.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FreshTrace — HTTP cache headers, explained over time">
+  <meta name="twitter:description" content="Compare browser and shared-cache decisions with offline A/B timelines and a zero-dependency CLI.">
+  <meta name="twitter:image" content="https://qsxustc.github.io/freshtrace/assets/social-card.jpg">
   <title>FreshTrace — See your cache policy in time</title>
   <link rel="icon" type="image/svg+xml" href="./icon.svg">
   <link rel="stylesheet" href="./styles.css">
@@ -54,7 +67,7 @@
       </div>
     </div>
   </main>
-  <footer><span>FreshTrace <span class="footer-dot">·</span> <span data-i18n="footer">Small tool. Fewer cache surprises.</span></span><div><a href="https://httpwg.org/specs/rfc9111.html" target="_blank" rel="noopener noreferrer">RFC 9111 ↗</a><a href="https://httpwg.org/specs/rfc5861.html" target="_blank" rel="noopener noreferrer">RFC 5861 ↗</a><span>MIT</span></div></footer>
+  <footer><span>FreshTrace <span class="footer-dot">·</span> <span data-i18n="footer">Small tool. Fewer cache surprises.</span></span><div><a href="./learn/">HTTP cache guide ↗</a><a href="https://httpwg.org/specs/rfc9111.html" target="_blank" rel="noopener noreferrer">RFC 9111 ↗</a><a href="https://httpwg.org/specs/rfc5861.html" target="_blank" rel="noopener noreferrer">RFC 5861 ↗</a><span>MIT</span></div></footer>
   <dialog id="model-dialog"><div class="dialog-heading"><h2 data-i18n="model">How it works</h2><button id="close-model" aria-label="Close">×</button></div><div id="model-content"></div></dialog>
   <div class="toast" id="toast" role="status" hidden></div>
   <noscript>FreshTrace needs JavaScript to explain caching headers. The CLI is available without a browser.</noscript>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qsxustc.github.io/freshtrace/sitemap.xml

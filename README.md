@@ -8,6 +8,8 @@
 
 [Release notes](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0) · [Tagged source archive](https://github.com/qsxustc/freshtrace/archive/refs/tags/v0.1.0.zip)
 
+[Four HTTP cache questions, explained](https://qsxustc.github.io/freshtrace/learn/): max-age vs s-maxage, existing Age, no-cache vs no-store, and stale windows, with small reproducible examples.
+
 Paste response headers. Move through time. See when a browser or shared cache can reuse a response, needs to validate it, or has to contact the origin. Then compare a second policy before changing your configuration.
 
 FreshTrace is an offline HTTP cache policy lab with a browser interface and a command-line tool. Both use the same deterministic analysis engine. No account, API key, AI model, or runtime dependencies are required.

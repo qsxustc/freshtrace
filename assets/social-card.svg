@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">FreshTrace: one response, two cache timelines</title>
+  <desc id="desc">With Age 45, max-age 60 and s-maxage 300, a modeled browser cache has 15 seconds of freshness left and a shared cache has 255 seconds left.</desc>
+  <rect width="1200" height="630" fill="#f7f8fa"/>
+  <g font-family="Arial, Helvetica, sans-serif">
+    <rect x="58" y="48" width="46" height="46" rx="13" fill="#355eea"/>
+    <path d="M68 72h8l5-13 6 25 5-12h5" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="120" y="82" fill="#202937" font-size="30" font-weight="700">FreshTrace</text>
+    <text x="58" y="167" fill="#202937" font-size="53" font-weight="700">Cache headers. Clear answers.</text>
+    <text x="60" y="213" fill="#677182" font-size="24">One response. Two caches. Every decision explained.</text>
+    <rect x="60" y="251" width="1080" height="71" rx="15" fill="#ffffff" stroke="#e1e5ec"/>
+    <text x="84" y="294" fill="#3a4659" font-size="22" font-family="Menlo, Consolas, monospace">Cache-Control: max-age=60, s-maxage=300</text>
+    <text x="971" y="294" fill="#355eea" font-size="22" font-family="Menlo, Consolas, monospace">Age: 45</text>
+    <text x="61" y="375" fill="#202937" font-size="22" font-weight="700">Browser cache</text>
+    <text x="1128" y="375" text-anchor="end" fill="#355eea" font-size="22" font-weight="700">15s of freshness left</text>
+    <rect x="61" y="395" width="1068" height="18" rx="9" fill="#e4e8f0"/>
+    <rect x="61" y="395" width="53" height="18" rx="9" fill="#355eea"/>
+    <text x="61" y="459" fill="#202937" font-size="22" font-weight="700">Shared cache / CDN model</text>
+    <text x="1128" y="459" text-anchor="end" fill="#355eea" font-size="22" font-weight="700">255s of freshness left</text>
+    <rect x="61" y="479" width="1068" height="18" rx="9" fill="#e4e8f0"/>
+    <rect x="61" y="479" width="908" height="18" rx="9" fill="#355eea"/>
+    <text x="61" y="539" fill="#677182" font-size="18">At receipt · Complete GET 200 model · No transit delay · Explicit freshness</text>
+    <text x="61" y="591" fill="#202937" font-size="21" font-weight="700">Try the offline lab + CLI</text>
+    <text x="1130" y="591" text-anchor="end" fill="#355eea" font-size="21">qsxustc.github.io/freshtrace/</text>
+  </g>
+</svg>

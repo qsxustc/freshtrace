@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="360" viewBox="0 0 600 360" role="img" aria-labelledby="title desc">
+  <title id="title">A cache policy, drawn in time</title><desc id="desc">Fresh for 60 seconds, background validation until 90, and stale reuse on a qualifying origin error until 180. Illustrative FreshTrace model.</desc>
+  <rect x=".5" y=".5" width="599" height="359" rx="14" fill="#fff" stroke="#e1e7f0"/>
+  <g font-family="-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif" fill="#19283c">
+    <text x="32" y="39" font-size="10" fill="#70839c" letter-spacing="1.5">ONE RESPONSE · THE NEXT REQUEST</text>
+    <text x="32" y="74" font-size="22" font-weight="600">Age moves forward.</text>
+    <text x="32" y="97" font-size="11" fill="#607086">The freshness clock does not restart at receipt.</text>
+    <rect x="32" y="118" width="536" height="39" rx="6" fill="#f4f7fb"/>
+    <text x="47" y="143" font-family="ui-monospace,monospace" font-size="10" fill="#637790">max-age=60 · stale-while-revalidate=30 · stale-if-error=120</text>
+    <text x="32" y="185" font-size="10" fill="#607086">NORMAL REQUEST</text>
+    <rect x="32" y="197" width="161" height="14" rx="3" fill="#b5dfcc"/>
+    <rect x="195" y="197" width="79" height="14" rx="3" fill="#c2d6f7"/>
+    <rect x="276" y="197" width="292" height="14" rx="3" fill="#eef1f6"/>
+    <text x="32" y="242" font-size="10" fill="#607086">QUALIFYING ORIGIN ERROR</text>
+    <rect x="32" y="253" width="161" height="14" rx="3" fill="#b5dfcc"/>
+    <rect x="195" y="253" width="320" height="14" rx="3" fill="#f3dfb6"/>
+    <rect x="517" y="253" width="51" height="14" rx="3" fill="#eef1f6"/>
+    <g font-family="ui-monospace,monospace" font-size="9" fill="#6f8198"><text x="32" y="287">0s</text><text x="185" y="287">60s</text><text x="264" y="287">90s</text><text x="499" y="287">180s</text><text x="540" y="287">200s</text></g>
+    <rect x="32" y="312" width="6" height="6" rx="2" fill="#6ab69b"/><text x="45" y="319" font-size="9" fill="#607086">Fresh</text>
+    <rect x="106" y="312" width="6" height="6" rx="2" fill="#86a9e9"/><text x="119" y="319" font-size="9" fill="#607086">Background validation</text>
+    <rect x="255" y="312" width="6" height="6" rx="2" fill="#dfb569"/><text x="268" y="319" font-size="9" fill="#607086">Stale reuse on error</text>
+    <rect x="390" y="312" width="6" height="6" rx="2" fill="#ccd5e2"/><text x="403" y="319" font-size="9" fill="#607086">Contact origin</text>
+  </g>
+</svg>

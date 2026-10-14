@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>HTTP cache headers: max-age, Age &amp; stale windows — FreshTrace</title>
+  <meta name="description" content="Understand max-age vs s-maxage, existing Age, no-cache vs no-store, and stale windows through four small examples. Try them in FreshTrace's offline cache lab.">
+  <meta name="theme-color" content="#f7f8fa">
+  <link rel="canonical" href="https://qsxustc.github.io/freshtrace/learn/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="FreshTrace">
+  <meta property="og:title" content="Four HTTP cache questions, explained in time">
+  <meta property="og:description" content="Browser vs shared cache, existing Age, validation vs storage, and stale windows. Four examples you can explore in an offline lab.">
+  <meta property="og:url" content="https://qsxustc.github.io/freshtrace/learn/">
+  <meta property="og:image" content="https://qsxustc.github.io/freshtrace/assets/social-card.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="FreshTrace: Age 45, max-age 60 and s-maxage 300 produce different browser and shared-cache timelines.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Four HTTP cache questions, explained in time">
+  <meta name="twitter:description" content="Learn what max-age, s-maxage, Age, no-cache and stale extensions mean. Then explore the timeline in FreshTrace.">
+  <meta name="twitter:image" content="https://qsxustc.github.io/freshtrace/assets/social-card.jpg">
+  <meta name="twitter:image:alt" content="FreshTrace: Age 45, max-age 60 and s-maxage 300 produce different browser and shared-cache timelines.">
+  <link rel="icon" type="image/svg+xml" href="../icon.svg">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#questions">Skip to examples</a>
+  <header class="topbar">
+    <a class="brand" href="../"><img src="../icon.svg" width="30" height="30" alt="">FreshTrace<span>Field guide</span></a>
+    <nav aria-label="Main navigation"><a href="https://github.com/qsxustc/freshtrace">GitHub ↗</a><a class="nav-cta" href="../">Open the lab <span aria-hidden="true">→</span></a></nav>
+  </header>
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy"><p class="eyebrow">HTTP CACHE FIELD GUIDE</p><h1 id="page-title">Cache headers.<br><span>Four clear answers.</span></h1><p class="lead">A response can be stored, yet need validation.<br>It can be fresh in one cache, and stale in another.<br>Time is the missing part of the story.</p><a class="button primary" href="../">Explore your headers <span aria-hidden="true">→</span></a><p class="hero-note">Offline lab · Open source · No account</p></div>
+      <figure class="hero-visual"><img src="./share.svg" alt="An illustrative response timeline: fresh until age 60, background validation until age 90, and stale reuse on qualifying origin error until age 180." width="600" height="360"><figcaption>One response. Different permissions as it ages.</figcaption></figure>
+    </section>
+    <nav class="question-nav" aria-label="Four cache questions"><a href="#max-age"><span>01</span> Browser vs shared cache</a><a href="#age"><span>02</span> Age already counts</a><a href="#no-cache"><span>03</span> Validation vs storage</a><a href="#stale"><span>04</span> Stale windows</a></nav>
+    <div id="questions" class="guide">
+      <article class="chapter" id="max-age" aria-labelledby="max-age-title">
+        <div class="chapter-heading"><span class="chapter-number">01</span><div><p class="eyebrow">SAME RESPONSE · TWO CACHES</p><h2 id="max-age-title">How do max-age and s-maxage differ?</h2></div></div>
+        <p><code>max-age</code> sets an explicit freshness lifetime. For a shared cache, <code>s-maxage</code> takes priority over it and <code>Expires</code>. A private cache ignores <code>s-maxage</code>. <a class="source" href="https://www.rfc-editor.org/rfc/rfc9111.html#section-5.2.2.10">RFC 9111 §5.2.2.10 ↗</a></p>
+        <pre><code>Cache-Control: public, max-age=60, s-maxage=300</code></pre>
+        <p class="example-label">FreshTrace example · Age starts at 0 · 75 seconds after receipt</p>
+        <div class="comparison"><div><span class="cache-kind">PRIVATE / BROWSER</span><strong>60<span>s lifetime</span></strong><span class="state needs-validation">Stale · contact origin</span></div><div><span class="cache-kind">SHARED / CDN</span><strong>300<span>s lifetime</span></strong><span class="state fresh">Fresh · 225s remaining</span></div></div>
+        <p class="small-note">In the model, a shared response with <code>s-maxage</code> also needs validation once stale. The cache labels describe roles; deployment configuration can change real behavior.</p>
+      </article>
+      <article class="chapter" id="age" aria-labelledby="age-title">
+        <div class="chapter-heading"><span class="chapter-number">02</span><div><p class="eyebrow">RECEIPT IS NOT A RESET</p><h2 id="age-title">Why does max-age=60 leave only 15 seconds?</h2></div></div>
+        <p>The <code>Age</code> header represents time already spent since generation or validation. FreshTrace adds time since receipt; with capture clocks, it also accounts for apparent age and response delay. <a class="source" href="https://www.rfc-editor.org/rfc/rfc9111.html#section-4.2.3">RFC 9111 §4.2.3 ↗</a></p>
+        <pre><code>Cache-Control: max-age=60
+Age: 45</code></pre>
+        <div class="age-equation" aria-label="45 seconds already old plus 15 seconds after receipt equals 60 seconds current age"><div><strong>45<span>s</span></strong><small>Already old</small></div><span class="operator">+</span><div><strong>15<span>s</span></strong><small>After receipt</small></div><span class="operator">=</span><div class="equation-result"><strong>60<span>s</span></strong><small>Current age · stale</small></div></div>
+        <p class="small-note">This example assumes zero transit delay and apparent age, as the lab does without capture timestamps. At receipt, 15 seconds remain. At elapsed 15, the response reaches its freshness boundary. FreshTrace considers <code>current age &lt; lifetime</code> fresh. <a class="source" href="https://github.com/qsxustc/freshtrace/blob/main/docs/MODEL.md#clocks-and-age">Capture defaults and boundaries ↗</a></p>
+      </article>
+      <article class="chapter" id="no-cache" aria-labelledby="no-cache-title">
+        <div class="chapter-heading"><span class="chapter-number">03</span><div><p class="eyebrow">TWO DIFFERENT PERMISSIONS</p><h2 id="no-cache-title">Does no-cache mean “do not store”?</h2></div></div>
+        <p>Unqualified <code>no-cache</code> requires successful validation before reuse. It can permit storage. <code>no-store</code> forbids storing the response for reuse. Storage and reuse are separate decisions. <a class="source" href="https://www.rfc-editor.org/rfc/rfc9111.html#section-5.2.2.4">RFC 9111 §5.2.2.4</a> · <a class="source" href="https://www.rfc-editor.org/rfc/rfc9111.html#section-5.2.2.5">§5.2.2.5 ↗</a></p>
+        <div class="policy-pair"><section><h3>Validate before reuse</h3><pre><code>Cache-Control: no-cache, max-age=600
+ETag: "version-1"</code></pre><p>At age 10, FreshTrace allows storage but requires origin validation. The nominal 600-second lifetime does not bypass <code>no-cache</code>.</p></section><section><h3>Do not store</h3><pre><code>Cache-Control: no-store</code></pre><p>At age 10, FreshTrace blocks storage. The next request needs a network fetch; there is no stored response to reuse in this scenario.</p></section></div>
+        <p class="small-note">Qualified field directives and successful 304 updates are outside this example. The lab models one unchanged stored response, not a sequence of refreshes.</p>
+      </article>
+      <article class="chapter" id="stale" aria-labelledby="stale-title">
+        <div class="chapter-heading"><span class="chapter-number">04</span><div><p class="eyebrow">FRESHNESS ENDS · PERMISSION MAY CONTINUE</p><h2 id="stale-title">When can a stale response still be served?</h2></div></div>
+        <p><code>stale-while-revalidate</code> permits stale reuse while validation runs in the background. <code>stale-if-error</code> permits stale reuse during a qualifying origin failure. Their allowances are measured from the freshness boundary. Support and use depend on the cache implementation. <a class="source" href="https://www.rfc-editor.org/rfc/rfc5861.html">RFC 5861 §§3–4 ↗</a></p>
+        <pre><code>Cache-Control: max-age=60, stale-while-revalidate=30,
+               stale-if-error=120</code></pre>
+        <div class="table-wrap"><table><caption>FreshTrace example · Age starts at 0 · a matching stored response</caption><thead><tr><th scope="col">Current age</th><th scope="col">Normal request</th><th scope="col">Qualifying origin error</th></tr></thead><tbody><tr><th scope="row">75s</th><td>Background validation</td><td>Stale reuse on error</td></tr><tr><th scope="row">120s</th><td>Contact origin</td><td>Stale reuse on error</td></tr><tr><th scope="row">181s</th><td>Contact origin</td><td>Origin required · cannot reuse</td></tr></tbody></table></div>
+        <p class="small-note">In FreshTrace, SWR ends at age 90 (exclusive); SIE ends at age 180 (inclusive). The engine conservatively blocks stale allowances under <code>no-cache</code>, <code>must-revalidate</code> and, for shared caches, <code>proxy-revalidate</code> or <code>s-maxage</code>. A visible window never guarantees a cache hit. <a class="source" href="https://github.com/qsxustc/freshtrace/blob/main/docs/MODEL.md#stale-serving-windows">Model choices ↗</a></p>
+      </article>
+    </div>
+    <section class="try-lab" aria-labelledby="try-title"><div><p class="eyebrow">TURN THE QUESTION INTO A TIMELINE</p><h2 id="try-title">Change one header.<br>See what changes over time.</h2><p>Open the lab, paste an example, and move the elapsed-time slider.<br>Compare two policies under the same request context.</p></div><div class="cta-group"><a class="button primary" href="../">Try FreshTrace <span aria-hidden="true">→</span></a><a class="button secondary" href="https://github.com/qsxustc/freshtrace">Explore the source ↗</a></div></section>
+    <aside class="scope-note"><strong>About these examples</strong><p>FreshTrace evaluates explicit response policy for one complete GET 200 response. It assumes the same URL, a matching variant and an unchanged stored representation. It does not observe live traffic, predict a specific CDN, simulate eviction or infer heuristic freshness. <a href="https://github.com/qsxustc/freshtrace/blob/main/docs/MODEL.md">Read the complete model ↗</a></p></aside>
+  </main>
+  <footer><a class="footer-brand" href="../">FreshTrace</a><p>Learn the policy. Verify your deployment.</p><nav aria-label="Footer navigation"><a href="https://github.com/qsxustc/freshtrace">GitHub</a><a href="https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0">Download</a><a href="../">Offline lab</a></nav></footer>
+</body>
+</html>

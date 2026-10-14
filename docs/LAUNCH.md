@@ -2,6 +2,8 @@
 
 The [repository](https://github.com/qsxustc/freshtrace), [live lab](https://qsxustc.github.io/freshtrace/), and [v0.1.0 GitHub Release](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0) are public. This file contains launch copy and instructions for subsequent releases. The project has not been published to npm.
 
+Actual directory submissions, sharing improvements, and channel rules are recorded in [PROMOTION.md](PROMOTION.md). General announcement drafts below are not submissions and should not be reused where current platform rules prohibit AI-assisted promotional content.
+
 **[Download v0.1.0 full package](https://github.com/qsxustc/freshtrace/releases/download/v0.1.0/freshtrace-v0.1.0.zip)** · [SHA-256 checksums](https://github.com/qsxustc/freshtrace/releases/download/v0.1.0/SHA256SUMS.txt)
 
 ## Positioning

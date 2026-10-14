@@ -12,9 +12,10 @@ const MIME = {
   '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg',
   '.webp': 'image/webp', '.gif': 'image/gif', '.ico': 'image/x-icon',
   '.md': 'text/plain; charset=utf-8', '.txt': 'text/plain; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8',
   '.http': 'text/plain; charset=utf-8', '.woff2': 'font/woff2', '.woff': 'font/woff',
 };
-const PUBLIC_FILES = new Set(['index.html', 'styles.css', 'icon.svg', 'README.md', 'README.zh-CN.md', 'src/cache.js', 'src/report.js', 'src/app.js', 'src/presets.js', 'src/scenario.js', 'src/timeline.js']);
+const PUBLIC_FILES = new Set(['index.html', 'styles.css', 'icon.svg', 'README.md', 'README.zh-CN.md', 'src/cache.js', 'src/report.js', 'src/app.js', 'src/presets.js', 'src/scenario.js', 'src/timeline.js', 'learn/index.html', 'learn/styles.css', 'learn/share.svg', 'robots.txt', 'sitemap.xml']);
 
 try {
   const requestedPort = parsePort(process.argv.slice(2));
@@ -45,9 +46,13 @@ async function handleRequest(request, response) {
   try { pathname = decodeURIComponent((request.url || '/').split('?')[0]); }
   catch { return sendError(response, 400, 'Malformed URL'); }
   if (!pathname.startsWith('/') || pathname.includes('\\') || pathname.includes('\0')) return sendError(response, 400, 'Invalid path');
+  if (pathname === '/learn') {
+    response.writeHead(308, { Location: '/learn/', 'Content-Length': 0 });
+    return response.end();
+  }
   const segments = pathname.split('/').filter(Boolean);
   if (segments.some(segment => segment.startsWith('.'))) return sendError(response, 404, 'Not found');
-  const relative = segments.length === 0 ? 'index.html' : segments.join('/');
+  const relative = segments.length === 0 ? 'index.html' : segments.length === 1 && segments[0] === 'learn' ? 'learn/index.html' : segments.join('/');
   if (!isPublic(relative)) return sendError(response, 404, 'Not found');
   const requestedFile = path.join(ROOT, relative);
   const resolved = await realpath(requestedFile);

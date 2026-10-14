@@ -4,7 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const BROWSER_FILES = ['index.html', 'styles.css', 'icon.svg', 'src/app.js', 'src/cache.js', 'src/presets.js', 'src/report.js', 'src/scenario.js', 'src/timeline.js'];
+const BROWSER_FILES = ['index.html', 'styles.css', 'icon.svg', 'robots.txt', 'sitemap.xml', 'learn/index.html', 'learn/styles.css', 'learn/share.svg', 'assets/social-card.svg', 'assets/social-card.jpg', 'src/app.js', 'src/cache.js', 'src/presets.js', 'src/report.js', 'src/scenario.js', 'src/timeline.js'];
 
 /** Produce only the browser runtime. Never copy arbitrary repository contents. */
 export async function build() {

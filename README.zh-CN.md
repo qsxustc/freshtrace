@@ -8,6 +8,8 @@
 
 [正式发布说明](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0) · [标签源码压缩包](https://github.com/qsxustc/freshtrace/archive/refs/tags/v0.1.0.zip)
 
+[HTTP 缓存的四个问题（英文）](https://qsxustc.github.io/freshtrace/learn/)：用可复现的小例子解释 max-age 与 s-maxage、已有 Age、no-cache 与 no-store，以及过期复用窗口。
+
 粘贴响应头，拖动时间，查看浏览器缓存和共享缓存何时能直接复用、何时需要验证、何时必须访问源站。再放入另一套策略，在修改配置前看清差异。
 
 FreshTrace 是一个可离线运行的 HTTP 缓存策略实验室，提供浏览器界面和命令行。两者共用同一个确定性的分析引擎，无需账号、API Key、AI 模型或运行时第三方依赖。
