@@ -1,0 +1,53 @@
+name: Incorrect result or bug
+description: Report a reproducible issue in the cache model, browser app, or CLI.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use synthetic or redacted inputs. Do not post cookies, tokens, private hostnames, or other sensitive headers. For a security concern, read SECURITY.md first.
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where does it happen?
+      options:
+        - Cache model
+        - Browser interface
+        - CLI
+        - Build or packaging
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Minimal input and scenario
+      description: Include the smallest header block, elapsed time, cache mode, and relevant toggles or command flags.
+      placeholder: |
+        Cache-Control: max-age=60
+        Age: 45
+
+        elapsed=30; cache=private; originError=false; authenticated=false; varyMatches=true
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+      description: Include the decision and explanation, or the exact error message.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result and evidence
+      description: For a model disagreement, link to the relevant RFC section or primary documentation. Identify implementation-specific settings when relevant.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Version and environment
+      description: FreshTrace version or commit, browser and version or Node.js version, and operating system.
+    validations:
+      required: true

@@ -1,0 +1,17 @@
+{
+  "name": "freshtrace",
+  "version": "0.1.0",
+  "description": "See what your HTTP cache headers actually mean. An offline browser lab and CLI.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "bin": { "freshtrace": "./bin/freshtrace.js" },
+  "scripts": {
+    "start": "node scripts/serve.js",
+    "dev": "node scripts/serve.js",
+    "test": "node --test tests/*.test.js",
+    "build": "node scripts/build.js",
+    "package:release": "node scripts/package-release.js"
+  }
+}

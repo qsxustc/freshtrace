@@ -1,0 +1,6 @@
+{
+  "cache-control": "public, max-age=60, s-maxage=300, stale-while-revalidate=120",
+  "age": "45",
+  "etag": "\"catalog-v3\"",
+  "vary": "Accept-Encoding"
+}

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Turn HTTP cache headers into clear answers. Compare browser and CDN behavior on an interactive timeline. Offline, open source, no account.">
+  <meta name="theme-color" content="#f7f8fa">
+  <title>FreshTrace — See your cache policy in time</title>
+  <link rel="icon" type="image/svg+xml" href="./icon.svg">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="FreshTrace home"><img src="./icon.svg" alt="" width="30" height="30">FreshTrace<span class="version">v0.1</span></a>
+    <nav aria-label="App actions"><span class="offline"><i></i><span data-i18n="local">Runs on your device</span></span><button class="text-button" id="model-button" data-i18n="model">How it works</button><button class="language" id="language-button" aria-label="Switch language">中文</button></nav>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow"><span></span> HTTP CACHE POLICY LAB</p><h1 data-i18n="title">Cache headers.<br><span>Clear answers.</span></h1><p class="subtitle" data-i18n="subtitle">Stop guessing what gets served. Paste headers, move through time,<br class="desktop-break"> and see the browser and CDN make their decisions.</p></div>
+      <div class="intro-note"><span class="note-symbol">↗</span><span data-i18n="introNote">One response.<br>Two caches.<br>Every decision explained.</span></div>
+    </section>
+    <div class="workspace">
+      <aside class="controls">
+        <section class="panel editor-panel">
+          <div class="panel-heading"><h2 data-i18n="responseHeaders">Response headers</h2><span class="tag">GET · 200</span></div>
+          <div class="policy-tabs" role="tablist" aria-label="Policy editor"><button role="tab" id="tab-a" aria-selected="true" aria-controls="header-editor" class="active"><span>A</span><span data-i18n="original">Original</span></button><button role="tab" id="tab-b" aria-selected="false" aria-controls="header-editor"><span>B</span><span data-i18n="alternative">Alternative</span></button></div>
+          <label class="sr-only" for="header-editor" data-i18n="responseHeaders">Response headers</label><textarea id="header-editor" spellcheck="false" autocomplete="off" aria-describedby="editor-hint"></textarea>
+          <div class="editor-foot"><span id="editor-hint" data-i18n="editorHint">Paste a header block or Cache-Control value</span><button class="text-button" id="copy-policy" data-i18n="copy">Copy</button></div>
+          <div class="input-error" id="input-error" role="alert" hidden></div>
+          <div class="presets"><label for="preset-select" data-i18n="tryExample">Try a scenario</label><select id="preset-select"></select><p id="preset-description"></p></div>
+        </section>
+        <section class="panel context-panel">
+          <div class="panel-heading"><h2 data-i18n="requestContext">Request context</h2><span class="small-text" data-i18n="bothPolicies">Applies to A + B</span></div>
+          <label class="switch-row"><span><strong data-i18n="originError">Origin is unavailable</strong><small data-i18n="originHint">Test the stale-if-error window</small></span><input id="origin-error" type="checkbox" role="switch"></label>
+          <label class="switch-row"><span><strong data-i18n="auth">Request has Authorization</strong><small data-i18n="authHint">Check shared cache permission</small></span><input id="authenticated" type="checkbox" role="switch"></label>
+          <label class="switch-row"><span><strong data-i18n="vary">Vary headers match</strong><small data-i18n="varyHint">Same representation as the stored response</small></span><input id="vary-matches" type="checkbox" checked role="switch"></label>
+          <details class="capture"><summary data-i18n="capture">Optional capture timestamps</summary><p data-i18n="captureHint">Use actual request and response times to include transit delay and apparent age.</p><label for="received-at" data-i18n="received">Response received (ISO 8601)</label><input id="received-at" placeholder="2026-10-14T10:00:00Z"><label for="requested-at" data-i18n="requested">Request sent (ISO 8601)</label><input id="requested-at" placeholder="2026-10-14T09:59:59Z"></details>
+        </section>
+        <div class="privacy-note"><span>◈</span><p data-i18n="privacy">Headers stay in this tab. No upload, no account, no analytics.</p></div>
+      </aside>
+      <div class="results">
+        <section class="panel time-panel">
+          <div class="time-heading"><div><p class="eyebrow" data-i18n="timeTravel">TIME TRAVEL</p><h2 data-i18n="nextRequest">When does the next request arrive?</h2></div><button id="play-button" class="play-button" aria-label="Play timeline">▶</button></div>
+          <div class="elapsed-line"><div class="time-readout"><span id="elapsed-display">75</span><span data-i18n="secondsLater">seconds after receipt</span></div><label class="numeric-time"><span data-i18n="elapsed">Elapsed</span><input id="elapsed-number" type="number" min="0" max="2147483648" value="75" step="1"><span>s</span></label></div>
+          <label class="sr-only" for="elapsed-slider" data-i18n="elapsed">Elapsed seconds</label><input id="elapsed-slider" class="time-slider" type="range" min="0" max="1200" step="1" value="75"><div class="ruler" id="ruler"></div>
+          <div class="timeline-legend"><span><i class="legend-dot fresh"></i><span data-i18n="fresh">Fresh</span></span><span><i class="legend-dot swr"></i><span data-i18n="swr">Background validation</span></span><span><i class="legend-dot sie"></i><span data-i18n="sie">On origin error</span></span><span><i class="legend-dot stale"></i><span data-i18n="stale">Contact origin</span></span></div>
+        </section>
+        <section class="decision-grid" aria-label="Policy comparison"><article class="panel policy-result" id="result-a"></article><article class="panel policy-result" id="result-b"></article></section>
+        <section class="panel takeaway-panel"><div class="takeaway-icon">↳</div><div><h2 data-i18n="whatChanged">What changes at this moment?</h2><p id="takeaway"></p></div></section>
+        <section class="panel inspect-panel"><div class="panel-heading"><h2 data-i18n="underHood">Follow the decision</h2><label class="inspect-select-label"><span class="sr-only" data-i18n="inspectPolicy">Inspect policy</span><select id="inspect-policy"><option value="a">A · Original</option><option value="b">B · Alternative</option></select></label></div><div id="inspection"></div></section>
+        <div class="export-row"><div><strong data-i18n="takeWithYou">Take the explanation with you.</strong><span data-i18n="exportHint">A reproducible scenario or a ready-to-share report.</span></div><div class="export-buttons"><button id="import-button" class="button" data-i18n="import">Import</button><button id="scenario-button" class="button" data-i18n="scenario">Save scenario</button><button id="report-button" class="button primary" data-i18n="report">Export report ↗</button></div></div>
+        <input id="import-file" type="file" accept=".json,application/json" hidden>
+        <p class="assumption" data-i18n="assumption">A standards-based model of a complete GET 200 response. Matching URL and cache key assumed. Without capture times: zero transit, receipt at Date. No heuristic TTL or provider overrides.</p>
+      </div>
+    </div>
+  </main>
+  <footer><span>FreshTrace <span class="footer-dot">·</span> <span data-i18n="footer">Small tool. Fewer cache surprises.</span></span><div><a href="https://httpwg.org/specs/rfc9111.html" target="_blank" rel="noopener noreferrer">RFC 9111 ↗</a><a href="https://httpwg.org/specs/rfc5861.html" target="_blank" rel="noopener noreferrer">RFC 5861 ↗</a><span>MIT</span></div></footer>
+  <dialog id="model-dialog"><div class="dialog-heading"><h2 data-i18n="model">How it works</h2><button id="close-model" aria-label="Close">×</button></div><div id="model-content"></div></dialog>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <noscript>FreshTrace needs JavaScript to explain caching headers. The CLI is available without a browser.</noscript>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>

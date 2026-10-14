@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "policies": {
+    "a": "Cache-Control: public, max-age=60, stale-while-revalidate=120, stale-if-error=600\nAge: 0\nETag: \"catalog-v3\"\nVary: Accept-Encoding",
+    "b": "Cache-Control: public, max-age=300, s-maxage=900, stale-while-revalidate=120, stale-if-error=600\nAge: 0\nETag: \"catalog-v3\"\nVary: Accept-Encoding"
+  },
+  "elapsed": 75,
+  "horizon": 1200,
+  "context": {
+    "originError": false,
+    "authenticated": false,
+    "varyMatches": true
+  }
+}
