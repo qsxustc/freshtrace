@@ -4,7 +4,9 @@
 
 [简体中文](README.zh-CN.md) · [Model & assumptions](docs/MODEL.md) · [Contributing](CONTRIBUTING.md)
 
-**[Try the public lab](https://qsxustc.github.io/freshtrace/)** · [Download v0.1.0 source](https://github.com/qsxustc/freshtrace/archive/refs/tags/v0.1.0.zip)
+**[Try the public lab](https://qsxustc.github.io/freshtrace/)** · **[Download v0.1.0 package](https://github.com/qsxustc/freshtrace/releases/download/v0.1.0/freshtrace-v0.1.0.zip)** · [SHA-256 checksums](https://github.com/qsxustc/freshtrace/releases/download/v0.1.0/SHA256SUMS.txt)
+
+[Release notes](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0) · [Tagged source archive](https://github.com/qsxustc/freshtrace/archive/refs/tags/v0.1.0.zip)
 
 Paste response headers. Move through time. See when a browser or shared cache can reuse a response, needs to validate it, or has to contact the origin. Then compare a second policy before changing your configuration.
 
@@ -22,7 +24,16 @@ The response is already 45 seconds old. A private cache has 15 seconds of freshn
 
 ## Try it locally
 
-Use Node.js 20 or later. From the repository directory:
+The published package contains the tagged source, CLI, documentation, and a static browser build in `dist/`. Download the ZIP and checksum file into the same directory, then verify the package before extracting it:
+
+```sh
+# macOS
+shasum -a 256 -c SHA256SUMS.txt
+# Linux
+sha256sum -c SHA256SUMS.txt
+```
+
+A successful check prints `freshtrace-v0.1.0.zip: OK`. Extract the package and open the `freshtrace-v0.1.0` directory, or clone the repository. Use Node.js 20 or later:
 
 ```sh
 npm start
@@ -117,9 +128,9 @@ npm run build
 npm run package:release
 ```
 
-The static build is written to `dist/`. Packaging requires the system `zip` command and writes `release/freshtrace-v0.1.0.zip`; use `npm run package:release -- --force` to replace an existing archive. Serve the static build with a static server or deploy it to static hosting. The included Pages workflow can publish it after GitHub Pages is configured to use GitHub Actions. A workflow file alone does not create a live deployment.
+The static build is written to `dist/`. Packaging requires the system `zip` command and writes `release/freshtrace-v0.1.0.zip`; use `npm run package:release -- --force` to replace an existing archive. Serve the static build with a static server or deploy it to static hosting. The included Pages workflow deploys the public lab through GitHub Actions.
 
-The [public lab](https://qsxustc.github.io/freshtrace/) is deployed through GitHub Pages. The release commit passed [Node.js 20, 22, and 24 CI](https://github.com/qsxustc/freshtrace/actions/runs/38573617461) and [the Pages deployment](https://github.com/qsxustc/freshtrace/actions/runs/38573617610).
+The [public lab](https://qsxustc.github.io/freshtrace/) is deployed through GitHub Pages. The release commit passed the 42-test suite in [Node.js 20, 22, and 24 CI](https://github.com/qsxustc/freshtrace/actions/runs/38573617461) and [the Pages deployment](https://github.com/qsxustc/freshtrace/actions/runs/38573617610). The [published v0.1.0 release](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0) was built from its immutable tag by the [release workflow](https://github.com/qsxustc/freshtrace/actions/runs/38577303096); all 37 packaged source files match that tag and the 12 static build files match their source. Packaging timestamps can change ZIP checksums between builds, so use the checksum attached to the release when verifying a download.
 
 Useful contributions include minimal header cases, corrections backed by a primary source, clearer decision explanations, and accessibility improvements. Start with [CONTRIBUTING.md](CONTRIBUTING.md).
 

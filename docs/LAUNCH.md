@@ -1,6 +1,8 @@
 # FreshTrace release positioning
 
-The [repository](https://github.com/qsxustc/freshtrace) and [live lab](https://qsxustc.github.io/freshtrace/) are public. This file contains release preparation, publishing instructions, and announcement drafts. The project has not been published to npm.
+The [repository](https://github.com/qsxustc/freshtrace), [live lab](https://qsxustc.github.io/freshtrace/), and [v0.1.0 GitHub Release](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0) are public. This file contains launch copy and instructions for subsequent releases. The project has not been published to npm.
+
+**[Download v0.1.0 full package](https://github.com/qsxustc/freshtrace/releases/download/v0.1.0/freshtrace-v0.1.0.zip)** · [SHA-256 checksums](https://github.com/qsxustc/freshtrace/releases/download/v0.1.0/SHA256SUMS.txt)
 
 ## Positioning
 
@@ -24,7 +26,7 @@ Possible topics:
 
 `http`, `http-caching`, `cache-control`, `cdn`, `developer-tools`, `visualization`, `offline`, `javascript`, `cli`, `web-performance`
 
-Set a homepage only after a real demo URL has been confirmed. Add CI or release badges only when their backing workflow and release exist.
+Verified homepage: [https://qsxustc.github.io/freshtrace/](https://qsxustc.github.io/freshtrace/). The release and CI results are linked directly in the README.
 
 ## Short demo sequence
 
@@ -46,7 +48,9 @@ Keep the recording focused on one question at a time. The explanation is part of
 >
 > The model and its limits are documented. Minimal header cases and corrections with RFC references are welcome.
 
-Append verified repository and demo links when publishing. Do not imply a public deployment or an npm install command before it exists.
+> [Try FreshTrace](https://qsxustc.github.io/freshtrace/) · [GitHub](https://github.com/qsxustc/freshtrace) · [Download v0.1.0](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0)
+
+Local usage is `npm start` from the extracted package or repository; there is no npm registry install command.
 
 ## 中文发布文案草稿
 
@@ -56,7 +60,7 @@ Append verified repository and demo links when publishing. Do not imply a public
 >
 > 模型假设和限制都有文档。欢迎提交最小响应头案例，以及附有 RFC 来源的语义修正。
 
-发布时补充已经验证的仓库和演示链接。
+> [在线体验](https://qsxustc.github.io/freshtrace/) · [GitHub 仓库](https://github.com/qsxustc/freshtrace) · [下载 v0.1.0](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0)
 
 ## Related projects and fair comparisons
 
@@ -66,9 +70,9 @@ Append verified repository and demo links when publishing. Do not imply a public
 
 Describe the different jobs these projects do. Avoid “first,” “only,” “more correct,” or blanket performance claims without evidence. Stars measure interest, not correctness; no launch plan can guarantee them.
 
-## Release preparation
+## Prepare subsequent releases
 
-Before publishing a tagged release:
+The v0.1.0 release is published. Before publishing a subsequent tagged release:
 
 1. Run `npm test`, `npm run build`, and `npm run package:release` from the intended release revision.
 2. Open the generated static build, check both desktop and narrow layouts, and verify scenario import/export and report output.
@@ -81,13 +85,24 @@ The repository is currently configured as a private npm package to prevent accid
 
 ## Publish a GitHub Release
 
+The v0.1.0 package and checksum were published by the [successful release workflow](https://github.com/qsxustc/freshtrace/actions/runs/38577303096). All 37 source files in the downloaded package match the immutable version tag, and all 12 static build files match their corresponding source files. The archive retains the tagged documentation; the publishing workflow and updated launch links live on `main`.
+
 The [Publish release workflow](../.github/workflows/release.yml) tests and packages an existing version tag, generates `SHA256SUMS.txt`, uploads both files to a draft, and publishes the release after checking that the checksum matches the uploaded ZIP. It checks out the tag explicitly and requires its name to match `package.json`.
 
 For an existing tag such as `v0.1.0`, open **Actions → Publish release → Run workflow**, select the `main` branch for the workflow definition, and enter the tag. For subsequent versions, prepare the package version, CLI version, and `docs/releases/vX.Y.Z.md` together, commit them, then push the version tag. A pushed `v*` tag runs the same workflow automatically.
 
 Repeating a run preserves existing assets and checks their consistency. A missing checksum is calculated from the uploaded ZIP rather than a rebuilt file. If only a checksum exists and the new ZIP does not match, the workflow fails with the existing asset intact. Packaging timestamps can make separate builds of the same source produce different ZIP hashes.
 
-After downloading both release assets into the same directory, verify them with `shasum -a 256 -c SHA256SUMS.txt` on macOS or `sha256sum -c SHA256SUMS.txt` on Linux.
+After downloading both release assets into the same directory, verify them before extracting:
+
+```sh
+# macOS
+shasum -a 256 -c SHA256SUMS.txt
+# Linux
+sha256sum -c SHA256SUMS.txt
+```
+
+A successful check prints `freshtrace-v0.1.0.zip: OK`. Use the checksum attached to the published release rather than one from a local rebuild.
 
 ## Possible later work
 

@@ -4,7 +4,9 @@
 
 [English](README.md) · [模型与假设](docs/MODEL.md) · [参与贡献](CONTRIBUTING.md)
 
-**[直接体验在线工具](https://qsxustc.github.io/freshtrace/)** · [下载 v0.1.0 源码](https://github.com/qsxustc/freshtrace/archive/refs/tags/v0.1.0.zip)
+**[直接体验在线工具](https://qsxustc.github.io/freshtrace/)** · **[下载 v0.1.0 完整包](https://github.com/qsxustc/freshtrace/releases/download/v0.1.0/freshtrace-v0.1.0.zip)** · [SHA-256 校验文件](https://github.com/qsxustc/freshtrace/releases/download/v0.1.0/SHA256SUMS.txt)
+
+[正式发布说明](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0) · [标签源码压缩包](https://github.com/qsxustc/freshtrace/archive/refs/tags/v0.1.0.zip)
 
 粘贴响应头，拖动时间，查看浏览器缓存和共享缓存何时能直接复用、何时需要验证、何时必须访问源站。再放入另一套策略，在修改配置前看清差异。
 
@@ -22,7 +24,16 @@ Age: 45
 
 ## 本地运行
 
-需要 Node.js 20 或更高版本。在项目目录中执行：
+完整发布包包含对应标签的源码、CLI、文档，以及 `dist/` 中的静态浏览器构建。把 ZIP 和校验文件下载到同一个目录，在解压前验证：
+
+```sh
+# macOS
+shasum -a 256 -c SHA256SUMS.txt
+# Linux
+sha256sum -c SHA256SUMS.txt
+```
+
+校验成功会显示 `freshtrace-v0.1.0.zip: OK`。解压后进入 `freshtrace-v0.1.0` 目录，或克隆仓库。需要 Node.js 20 或更高版本，然后执行：
 
 ```sh
 npm start
@@ -117,7 +128,9 @@ npm run build
 npm run package:release
 ```
 
-静态构建输出到 `dist/`。打包需要系统的 `zip` 命令，发布压缩包输出到 `release/freshtrace-v0.1.0.zip`；用 `npm run package:release -- --force` 覆盖已有压缩包。静态构建可以用静态服务器运行或部署到静态托管平台。仓库提供 Pages workflow；在 GitHub Pages 中选择 GitHub Actions 后可用于部署。仅存在 workflow 文件不代表已有线上站点。
+静态构建输出到 `dist/`。打包需要系统的 `zip` 命令，发布压缩包输出到 `release/freshtrace-v0.1.0.zip`；用 `npm run package:release -- --force` 覆盖已有压缩包。静态构建可以用静态服务器运行或部署到静态托管平台。仓库的 Pages workflow 已通过 GitHub Actions 部署在线工具。
+
+发布提交的 42 项测试已通过 [Node.js 20、22、24 CI](https://github.com/qsxustc/freshtrace/actions/runs/38573617461)，[Pages 部署](https://github.com/qsxustc/freshtrace/actions/runs/38573617610)也已成功。[v0.1.0 正式发布](https://github.com/qsxustc/freshtrace/releases/tag/v0.1.0)由 [Release workflow](https://github.com/qsxustc/freshtrace/actions/runs/38577303096) 从不变的版本标签构建；发布包中的 37 个源码文件与标签逐字节一致，12 个静态构建文件与对应源码一致。不同时间重新打包可能产生不同的 ZIP 校验值，下载验证请使用正式发布附带的校验文件。
 
 欢迎提交最小响应头案例、附有一手来源的语义修正、更清楚的解释和无障碍改进。详见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
