@@ -1,6 +1,6 @@
 # FreshTrace release positioning
 
-This file contains preparation notes and copy for a release. It does not claim that a public repository, npm package, or hosted demo already exists.
+The [repository](https://github.com/qsxustc/freshtrace) and [live lab](https://qsxustc.github.io/freshtrace/) are public. This file contains release preparation, publishing instructions, and announcement drafts. The project has not been published to npm.
 
 ## Positioning
 
@@ -78,6 +78,16 @@ Before publishing a tagged release:
 6. If deploying Pages, configure the repository's Pages source as GitHub Actions and verify the deployed URL before linking it. GitHub's [custom workflow guide](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages) describes the setup.
 
 The repository is currently configured as a private npm package to prevent accidental registry publication. GitHub source and a release archive are independent of npm publication.
+
+## Publish a GitHub Release
+
+The [Publish release workflow](../.github/workflows/release.yml) tests and packages an existing version tag, generates `SHA256SUMS.txt`, uploads both files to a draft, and publishes the release after checking that the checksum matches the uploaded ZIP. It checks out the tag explicitly and requires its name to match `package.json`.
+
+For an existing tag such as `v0.1.0`, open **Actions → Publish release → Run workflow**, select the `main` branch for the workflow definition, and enter the tag. For subsequent versions, prepare the package version, CLI version, and `docs/releases/vX.Y.Z.md` together, commit them, then push the version tag. A pushed `v*` tag runs the same workflow automatically.
+
+Repeating a run preserves existing assets and checks their consistency. A missing checksum is calculated from the uploaded ZIP rather than a rebuilt file. If only a checksum exists and the new ZIP does not match, the workflow fails with the existing asset intact. Packaging timestamps can make separate builds of the same source produce different ZIP hashes.
+
+After downloading both release assets into the same directory, verify them with `shasum -a 256 -c SHA256SUMS.txt` on macOS or `sha256sum -c SHA256SUMS.txt` on Linux.
 
 ## Possible later work
 

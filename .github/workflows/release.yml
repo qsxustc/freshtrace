@@ -1,0 +1,132 @@
+name: Publish release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to test, package, and publish
+        required: true
+        default: v0.1.0
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    env:
+      RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Validate requested tag
+        shell: bash
+        run: |
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9]+([.-][A-Za-z0-9]+)*)?$ ]]; then
+            echo 'An existing semantic version tag such as v0.1.0 is required.' >&2
+            exit 1
+          fi
+      - uses: actions/checkout@v7
+        with:
+          ref: refs/tags/${{ inputs.tag || github.ref_name }}
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Verify tag matches package version
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const pkg = JSON.parse(await readFile('package.json', 'utf8'));
+          if (`v${pkg.version}` !== process.env.RELEASE_TAG) throw new Error('Tag and package version differ.');
+          NODE
+      - name: Test tagged source
+        run: npm test
+      - name: Package tagged source and browser build
+        run: npm run package:release
+      - name: Create checksum and release notes
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile } from 'node:fs/promises';
+          import { createHash } from 'node:crypto';
+          import path from 'node:path';
+          const tag = process.env.RELEASE_TAG;
+          const name = `freshtrace-${tag}.zip`;
+          const bytes = await readFile(`release/${name}`);
+          const digest = createHash('sha256').update(bytes).digest('hex');
+          await writeFile('release/SHA256SUMS.txt', `${digest}  ${name}\n`);
+          const base = `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}`;
+          const run = `${base}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+          let notes = await readFile(`docs/releases/${tag}.md`, 'utf8');
+          notes = notes.replace(/\]\((\.\.\/[^)]+)\)/g, (_, target) => {
+            const relative = path.posix.normalize(`docs/releases/${target}`);
+            if (relative.startsWith('../')) throw new Error('Release link leaves the repository.');
+            return `](${base}/blob/${tag}/${relative.split('/').map(encodeURIComponent).join('/')})`;
+          });
+          notes = notes.replace(/^These notes contain no hosted demo URL\..*$/gm, '');
+          notes = notes.replace(/^.*a separate GitHub Release.*has not been published\..*$/gm, '');
+          const intro = `**[Live lab](https://qsxustc.github.io/freshtrace/)** · **[Source repository](${base})**\n\n`;
+          const validation = `\n\n## Package verification\n\nThis ZIP was built from the existing ${tag} tag after its tests passed in the [release workflow](${run}). It includes source and the static dist/ build. Verify the download against the attached SHA256SUMS.txt.\n`;
+          await writeFile('release/RELEASE-NOTES.md', intro + notes.trim() + validation);
+          NODE
+      - name: Publish package and checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          archive="release/freshtrace-${RELEASE_TAG}.zip"
+          archive_name="${archive##*/}"
+          remote_dir=$(mktemp -d "$RUNNER_TEMP/freshtrace-assets.XXXXXX")
+          has_asset() {
+            gh release view "$RELEASE_TAG" --json assets \
+              --jq ".assets | map(.name) | index(\"$1\") != null"
+          }
+          verify_checksum() {
+            node --input-type=module - "$1" "$2" "$archive_name" <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          import { createHash } from 'node:crypto';
+          const [archive, checksum, name] = process.argv.slice(2);
+          const digest = createHash('sha256').update(await readFile(archive)).digest('hex');
+          const expected = `${digest}  ${name}`;
+          if ((await readFile(checksum, 'utf8')).trim() !== expected) {
+            throw new Error('Published checksum does not match the ZIP; published assets were left intact.');
+          }
+          NODE
+          }
+          if ! gh release view "$RELEASE_TAG" --json assets >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --verify-tag --draft \
+              --title "FreshTrace ${RELEASE_TAG} — Cache headers, clear answers" \
+              --notes-file release/RELEASE-NOTES.md
+          fi
+          if [[ "$(has_asset "$archive_name")" != true ]]; then
+            if [[ "$(has_asset SHA256SUMS.txt)" == true ]]; then
+              gh release download "$RELEASE_TAG" --pattern SHA256SUMS.txt --dir "$remote_dir"
+              verify_checksum "$archive" "$remote_dir/SHA256SUMS.txt"
+            fi
+            gh release upload "$RELEASE_TAG" "$archive"
+          fi
+          gh release download "$RELEASE_TAG" --pattern "$archive_name" --dir "$remote_dir"
+          if [[ "$(has_asset SHA256SUMS.txt)" == true ]]; then
+            if [[ ! -f "$remote_dir/SHA256SUMS.txt" ]]; then
+              gh release download "$RELEASE_TAG" --pattern SHA256SUMS.txt --dir "$remote_dir"
+            fi
+            verify_checksum "$remote_dir/$archive_name" "$remote_dir/SHA256SUMS.txt"
+          else
+            (cd "$remote_dir" && sha256sum "$archive_name") > release/SHA256SUMS.txt
+            gh release upload "$RELEASE_TAG" release/SHA256SUMS.txt
+          fi
+          if [[ "$(gh release view "$RELEASE_TAG" --json isDraft --jq '.isDraft')" == true ]]; then
+            gh release edit "$RELEASE_TAG" --draft=false
+          fi
+          gh release view "$RELEASE_TAG" --json url --jq '.url' >> "$GITHUB_STEP_SUMMARY"
